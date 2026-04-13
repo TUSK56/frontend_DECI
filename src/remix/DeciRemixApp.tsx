@@ -18,7 +18,6 @@ import { useAuth } from "../auth/AuthContext";
 import type { SessionDto, TaskDto, ChatDto, AttendanceDto, PageId } from "../types";
 import type { NotifDto } from "../types";
 import { apiJson } from "../api/client";
-import { UserManagementPage } from "../pages/UserManagementPage";
 import { AdminSettingsPage } from "../pages/AdminSettingsPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { initialsFromName, type RemixUser, type CoordinatorOption, type LeaveRow, RemixAvatar } from "./remixCommon";
@@ -47,6 +46,7 @@ type RemixPage = string;
 export default function DeciRemixApp() {
   const { user, logout, isElevated, isAdmin } = useAuth();
   const [page, setPage] = useState<RemixPage>("dashboard");
+  const [settingsTab, setSettingsTab] = useState<"users" | "control">("control");
   const [sidebar, setSidebar] = useState(true);
   const [loading, setLoading] = useState(true);
   const [attendance, setAttendance] = useState<AttendanceDto[]>([]);
@@ -136,7 +136,7 @@ export default function DeciRemixApp() {
       { id: "attendance", label: "Attendance", icon: Clock },
     ];
     if (isElevated) base.push({ id: "reports", label: "Reports & Export", icon: BarChart2 });
-    if (isAdmin) base.push({ id: "users", label: "User Management", icon: Users });
+    if (isAdmin) base.push({ id: "userMgmt", label: "User Management", icon: Users });
     if (isElevated) base.push({ id: "settings", label: "Settings", icon: Settings });
     return base;
   }, [isElevated, isAdmin]);
@@ -165,8 +165,11 @@ export default function DeciRemixApp() {
   }
 
   const title =
-    nav.find((n) => n.id === page)?.label ??
-    (page === "profile" ? "Profile" : page === "settings" ? "Settings" : "DECI");
+    page === "settings"
+      ? settingsTab === "users"
+        ? "User & profile management"
+        : "Settings"
+      : nav.find((n) => n.id === page)?.label ?? (page === "profile" ? "Profile" : "DECI");
 
   return (
     <div className="deci-remix" style={{ display: "flex", height: "100vh", background: "#f8fafc", fontFamily: "'Inter',system-ui,sans-serif" }}>
@@ -208,34 +211,54 @@ export default function DeciRemixApp() {
           )}
         </div>
         <nav style={{ flex: 1, padding: "10px 8px", overflowY: "auto" }}>
-          {nav.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              type="button"
-              className="dr-ni"
-              onClick={() => setPage(id)}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "9px 8px",
-                borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                marginBottom: 2,
-                background: page === id ? "rgba(255,255,255,.15)" : "transparent",
-                color: page === id ? "#fff" : "rgba(255,255,255,.6)",
-                fontWeight: page === id ? 600 : 400,
-                fontSize: 13,
-                transition: "all .2s",
-                fontFamily: "inherit",
-              }}
-            >
-              <Icon size={17} style={{ flexShrink: 0 }} />
-              {sidebar && <span style={{ whiteSpace: "nowrap" }}>{label}</span>}
-            </button>
-          ))}
+          {nav.map(({ id, label, icon: Icon }) => {
+            const active =
+              id === "userMgmt"
+                ? page === "settings" && settingsTab === "users"
+                : id === "settings"
+                  ? page === "settings" && settingsTab === "control"
+                  : page === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                className="dr-ni"
+                onClick={() => {
+                  if (id === "userMgmt") {
+                    setSettingsTab("users");
+                    setPage("settings");
+                    return;
+                  }
+                  if (id === "settings") {
+                    setSettingsTab("control");
+                    setPage("settings");
+                    return;
+                  }
+                  setPage(id);
+                }}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "9px 8px",
+                  borderRadius: 8,
+                  border: "none",
+                  cursor: "pointer",
+                  marginBottom: 2,
+                  background: active ? "rgba(255,255,255,.15)" : "transparent",
+                  color: active ? "#fff" : "rgba(255,255,255,.6)",
+                  fontWeight: active ? 600 : 400,
+                  fontSize: 13,
+                  transition: "all .2s",
+                  fontFamily: "inherit",
+                }}
+              >
+                <Icon size={17} style={{ flexShrink: 0 }} />
+                {sidebar && <span style={{ whiteSpace: "nowrap" }}>{label}</span>}
+              </button>
+            );
+          })}
         </nav>
         <div style={{ padding: "10px 8px", borderTop: "1px solid rgba(255,255,255,.1)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, borderRadius: 8, marginBottom: 6 }}>
@@ -277,7 +300,10 @@ export default function DeciRemixApp() {
                 type="button"
                 className="dr-ni"
                 title="Settings"
-                onClick={() => setPage("settings")}
+                onClick={() => {
+                  setSettingsTab("control");
+                  setPage("settings");
+                }}
                 style={{
                   flex: 1,
                   display: "flex",
@@ -288,7 +314,7 @@ export default function DeciRemixApp() {
                   borderRadius: 8,
                   border: "none",
                   cursor: "pointer",
-                  background: page === "settings" ? "rgba(255,255,255,.12)" : "transparent",
+                  background: page === "settings" && settingsTab === "control" ? "rgba(255,255,255,.12)" : "transparent",
                   color: "rgba(255,255,255,.85)",
                   fontSize: 12,
                   fontFamily: "inherit",
@@ -332,7 +358,32 @@ export default function DeciRemixApp() {
             </button>
             <h1 style={{ fontSize: 17, fontWeight: 600, color: "#1e293b" }}>{title}</h1>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            {isElevated && (
+              <button
+                type="button"
+                title="Settings"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setSettingsTab("control");
+                  setPage("settings");
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 40,
+                  height: 40,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: page === "settings" && settingsTab === "control" ? "#f1f5f9" : "#fff",
+                  cursor: "pointer",
+                  color: "#475569",
+                }}
+              >
+                <Settings size={20} />
+              </button>
+            )}
             <div style={{ position: "relative" }}>
               <button type="button" onClick={() => setShowNotifs(!showNotifs)} style={{ background: "none", border: "none", cursor: "pointer", padding: 8, borderRadius: 8, color: "#64748b", position: "relative", display: "flex" }}>
                 <Bell size={19} />
@@ -427,6 +478,7 @@ export default function DeciRemixApp() {
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
+                        setSettingsTab("control");
                         setPage("settings");
                       }}
                       style={{ display: "block", width: "100%", padding: "10px 14px", textAlign: "left", fontSize: 13, border: "none", background: "none", cursor: "pointer" }}
@@ -450,14 +502,9 @@ export default function DeciRemixApp() {
           {page === "tasks" && <RemixTasksPage user={rUser} tasks={tasks} coordinators={coordinators} onRefresh={refresh} />}
           {page === "chat" && <RemixChatPage user={rUser} messages={messages} onRefresh={refresh} />}
           {page === "reports" && isElevated && <RemixReportsPage sessions={sessions} coordinators={coordinators} />}
-          {page === "users" && isAdmin && (
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
-              <UserManagementPage setPage={(p: PageId) => setPage(p)} />
-            </div>
-          )}
           {page === "settings" && isElevated && (
             <div className="rounded-xl border border-slate-200 bg-white p-4">
-              <AdminSettingsPage />
+              <AdminSettingsPage initialTab={settingsTab} setPage={(p: PageId) => setPage(p)} />
             </div>
           )}
           {page === "profile" && (

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { apiJson } from "../api/client";
 import type { SystemSettingsDto } from "../types";
+import type { PageId } from "../types";
+import { useAuth } from "../auth/AuthContext";
+import { UserManagementPage } from "./UserManagementPage";
 
 type Row = { id: number; name?: string; code?: string; isActive?: boolean };
 
-export function AdminSettingsPage() {
+export type AdminSettingsTab = "users" | "control";
+
+function ControlPanelSection() {
   const [settings, setSettings] = useState<SystemSettingsDto | null>(null);
   const [trainers, setTrainers] = useState<Row[]>([]);
   const [codes, setCodes] = useState<Row[]>([]);
@@ -68,13 +73,6 @@ export function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-bold text-slate-900">Admin control panel</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Global lists, attendance policy, and session rules. User accounts are managed under <strong>User Management</strong> in the sidebar.
-        </p>
-      </div>
-
       <div className="card space-y-4">
         <div className="text-sm font-semibold text-slate-900">Attendance policy</div>
         <div className="grid gap-3 md:grid-cols-2">
@@ -148,6 +146,69 @@ export function AdminSettingsPage() {
           </ul>
         </div>
       </div>
+    </div>
+  );
+}
+
+type Props = {
+  initialTab?: AdminSettingsTab;
+  setPage?: (p: PageId) => void;
+};
+
+export function AdminSettingsPage({ initialTab = "control", setPage }: Props) {
+  const { isAdmin, isElevated } = useAuth();
+  const [tab, setTab] = useState<AdminSettingsTab>(initialTab);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
+
+  if (!isElevated) {
+    return <div className="text-sm text-slate-600">You do not have access to admin settings.</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">Admin settings</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          {isAdmin
+            ? "User & profile management and the operational control panel (lists, attendance policy, session rules)."
+            : "Operational control panel: trainer/group lists, attendance policy, and session approval rules."}
+        </p>
+      </div>
+
+      {isAdmin && (
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-1">
+          <button
+            type="button"
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium transition ${
+              tab === "users" ? "border-b-2 border-brand-600 text-brand-700" : "text-slate-600 hover:text-slate-900"
+            }`}
+            onClick={() => setTab("users")}
+          >
+            User &amp; profile management
+          </button>
+          <button
+            type="button"
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium transition ${
+              tab === "control" ? "border-b-2 border-brand-600 text-brand-700" : "text-slate-600 hover:text-slate-900"
+            }`}
+            onClick={() => setTab("control")}
+          >
+            Control panel
+          </button>
+        </div>
+      )}
+
+      {isAdmin && tab === "users" && setPage && (
+        <UserManagementPage
+          setPage={setPage}
+          onOpenControlPanel={() => setTab("control")}
+        />
+      )}
+
+      {(!isAdmin || tab === "control") && <ControlPanelSection />}
     </div>
   );
 }

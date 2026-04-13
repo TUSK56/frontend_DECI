@@ -15,7 +15,14 @@ type UserRow = {
   createdAt: string;
 };
 
-export function UserManagementPage({ setPage }: { setPage: (p: PageId) => void }) {
+export function UserManagementPage({
+  setPage,
+  onOpenControlPanel,
+}: {
+  setPage: (p: PageId) => void;
+  /** When set, &quot;Control panel&quot; switches admin hub to the control tab instead of navigating away. */
+  onOpenControlPanel?: () => void;
+}) {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [show, setShow] = useState(false);
   const [edit, setEdit] = useState<UserRow | null>(null);
@@ -96,7 +103,11 @@ export function UserManagementPage({ setPage }: { setPage: (p: PageId) => void }
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm text-slate-600">{users.length} users</div>
         <div className="flex gap-2">
-          <button type="button" className="btn-secondary" onClick={() => setPage("settings")}>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => (onOpenControlPanel ? onOpenControlPanel() : setPage("settings"))}
+          >
             Control panel
           </button>
           <button type="button" className="btn-primary" onClick={openCreate}>

@@ -83,7 +83,7 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {data.stats && (
+      {data.stats ? (
         <div>
           <h2 className="mb-3 text-sm font-semibold text-slate-900">Activity summary</h2>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -97,6 +97,13 @@ export function ProfilePage() {
             </div>
           </div>
         </div>
+      ) : (
+        data.user.role !== "Coordinator" && (
+          <div className="card text-sm text-slate-600">
+            Session and task totals on this screen apply to <strong>coordinator</strong> field work. For organization-wide metrics, use{" "}
+            <strong>Dashboard</strong> and <strong>Reports</strong>.
+          </div>
+        )
       )}
 
       <div className="card space-y-3">
