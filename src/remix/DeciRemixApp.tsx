@@ -261,7 +261,7 @@ export default function DeciRemixApp() {
           })}
         </nav>
         <div style={{ padding: "10px 8px", borderTop: "1px solid rgba(255,255,255,.1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 4px", marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 4px", marginBottom: 8, width: "100%" }}>
             <button
               type="button"
               title="Profile"
@@ -273,10 +273,19 @@ export default function DeciRemixApp() {
                 cursor: "pointer",
                 borderRadius: "50%",
                 lineHeight: 0,
+                flexShrink: 0,
               }}
             >
               <RemixAvatar user={rUser} size={36} />
             </button>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              {sidebar && (
+                <>
+                  <div style={{ color: "#fff", fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{rUser.name}</div>
+                  <div style={{ color: "rgba(255,255,255,.4)", fontSize: 11, textTransform: "capitalize" }}>{rUser.role === "manager" ? "Lead" : "Coordinator"}</div>
+                </>
+              )}
+            </div>
             <button
               type="button"
               className="dr-ni"
@@ -293,28 +302,16 @@ export default function DeciRemixApp() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 36,
-                height: 36,
-                borderRadius: 8,
+                padding: 6,
                 border: "none",
                 cursor: "pointer",
-                background:
-                  isElevated && page === "settings" && settingsTab === "control"
-                    ? "rgba(255,255,255,.15)"
-                    : !isElevated && page === "profile"
-                      ? "rgba(255,255,255,.15)"
-                      : "rgba(255,255,255,.06)",
+                background: "transparent",
                 color: "rgba(255,255,255,.9)",
+                flexShrink: 0,
               }}
             >
               <Settings size={18} />
             </button>
-            {sidebar && (
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ color: "#fff", fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{rUser.name}</div>
-                <div style={{ color: "rgba(255,255,255,.4)", fontSize: 11, textTransform: "capitalize" }}>{rUser.role === "manager" ? "Lead" : "Coordinator"}</div>
-              </div>
-            )}
           </div>
           <button
             type="button"
@@ -430,6 +427,27 @@ export default function DeciRemixApp() {
                     overflow: "hidden",
                   }}
                 >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setPage("profile");
+                    }}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      padding: "12px 16px",
+                      textAlign: "center",
+                      fontSize: 13,
+                      border: "none",
+                      borderBottom: "1px solid #e2e8f0",
+                      background: page === "profile" ? "#f8fafc" : "#fff",
+                      cursor: "pointer",
+                      color: "#2563eb",
+                    }}
+                  >
+                    Profile
+                  </button>
                   <button
                     type="button"
                     onClick={() => {
