@@ -1,0 +1,207 @@
+/* DECI remixed UI — scoped to .deci-remix to avoid clashing with Tailwind */
+@keyframes dr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dr-si {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes dr-fi {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.deci-remix .dr-ni:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+.deci-remix .dr-hr:hover {
+  background: #f1f5f9 !important;
+}
+.deci-remix .dr-bp {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.deci-remix .dr-bp:hover {
+  background: #4f46e5;
+}
+.deci-remix .dr-bs {
+  background: #fff;
+  color: #374151;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+.deci-remix .dr-bs:hover {
+  background: #f1f5f9;
+}
+.deci-remix .dr-bd {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+.deci-remix .dr-bd:hover {
+  background: #dc2626;
+}
+.deci-remix .dr-bgs {
+  background: #10b981;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+.deci-remix .dr-bgs:hover {
+  background: #059669;
+}
+.deci-remix input,
+.deci-remix select,
+.deci-remix textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  color: #1e293b;
+}
+.deci-remix input:focus,
+.deci-remix select:focus,
+.deci-remix textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.deci-remix label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  display: block;
+  margin-bottom: 4px;
+}
+.deci-remix .dr-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+}
+.deci-remix .dr-bpn {
+  background: #fef3c7;
+  color: #d97706;
+}
+.deci-remix .dr-bpa {
+  background: #d1fae5;
+  color: #059669;
+}
+.deci-remix .dr-bpr {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.deci-remix .dr-bado {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+.deci-remix .dr-bain {
+  background: #fef3c7;
+  color: #d97706;
+}
+.deci-remix .dr-badn {
+  background: #d1fae5;
+  color: #059669;
+}
+.deci-remix .dr-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.deci-remix .dr-sc::-webkit-scrollbar {
+  width: 4px;
+}
+.deci-remix .dr-sc::-webkit-scrollbar-track {
+  background: transparent;
+}
+.deci-remix .dr-sc::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.deci-remix .dr-mo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: dr-fi 0.15s;
+  padding: 20px;
+}
+.deci-remix .dr-md {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: dr-si 0.2s;
+}
+.deci-remix .dr-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 13px;
+}
+.deci-remix .dr-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #374151;
+}
