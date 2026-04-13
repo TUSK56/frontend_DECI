@@ -295,35 +295,42 @@ export default function DeciRemixApp() {
               <User size={16} />
               {sidebar && <span>Profile</span>}
             </button>
-            {isElevated && (
-              <button
-                type="button"
-                className="dr-ni"
-                title="Settings"
-                onClick={() => {
+            <button
+              type="button"
+              className="dr-ni"
+              title={isElevated ? "Admin settings" : "Account settings"}
+              onClick={() => {
+                if (isElevated) {
                   setSettingsTab("control");
                   setPage("settings");
-                }}
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  padding: "8px 6px",
-                  borderRadius: 8,
-                  border: "none",
-                  cursor: "pointer",
-                  background: page === "settings" && settingsTab === "control" ? "rgba(255,255,255,.12)" : "transparent",
-                  color: "rgba(255,255,255,.85)",
-                  fontSize: 12,
-                  fontFamily: "inherit",
-                }}
-              >
-                <Settings size={16} />
-                {sidebar && <span>Settings</span>}
-              </button>
-            )}
+                } else {
+                  setPage("profile");
+                }
+              }}
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                padding: "8px 6px",
+                borderRadius: 8,
+                border: "none",
+                cursor: "pointer",
+                background:
+                  isElevated && page === "settings" && settingsTab === "control"
+                    ? "rgba(255,255,255,.12)"
+                    : !isElevated && page === "profile"
+                      ? "rgba(255,255,255,.12)"
+                      : "transparent",
+                color: "rgba(255,255,255,.85)",
+                fontSize: 12,
+                fontFamily: "inherit",
+              }}
+            >
+              <Settings size={16} />
+              {sidebar && <span>Settings</span>}
+            </button>
           </div>
           <button
             type="button"
@@ -359,31 +366,6 @@ export default function DeciRemixApp() {
             <h1 style={{ fontSize: 17, fontWeight: 600, color: "#1e293b" }}>{title}</h1>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            {isElevated && (
-              <button
-                type="button"
-                title="Settings"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setSettingsTab("control");
-                  setPage("settings");
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  border: "1px solid #e2e8f0",
-                  background: page === "settings" && settingsTab === "control" ? "#f1f5f9" : "#fff",
-                  cursor: "pointer",
-                  color: "#475569",
-                }}
-              >
-                <Settings size={20} />
-              </button>
-            )}
             <div style={{ position: "relative" }}>
               <button type="button" onClick={() => setShowNotifs(!showNotifs)} style={{ background: "none", border: "none", cursor: "pointer", padding: 8, borderRadius: 8, color: "#64748b", position: "relative", display: "flex" }}>
                 <Bell size={19} />
@@ -455,44 +437,100 @@ export default function DeciRemixApp() {
                     position: "absolute",
                     right: 0,
                     top: "calc(100% + 8px)",
-                    width: 180,
+                    minWidth: 200,
                     background: "#fff",
                     borderRadius: 12,
                     boxShadow: "0 10px 40px rgba(0,0,0,.12)",
                     border: "1px solid #e2e8f0",
                     zIndex: 200,
+                    overflow: "hidden",
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      setPage("profile");
-                    }}
-                    style={{ display: "block", width: "100%", padding: "10px 14px", textAlign: "left", fontSize: 13, border: "none", background: "none", cursor: "pointer" }}
-                  >
-                    Profile
-                  </button>
-                  {isElevated && (
+                  <div style={{ display: "flex", borderBottom: "1px solid #e2e8f0" }}>
                     <button
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        setSettingsTab("control");
-                        setPage("settings");
+                        setPage("profile");
                       }}
-                      style={{ display: "block", width: "100%", padding: "10px 14px", textAlign: "left", fontSize: 13, border: "none", background: "none", cursor: "pointer" }}
+                      style={{
+                        flex: 1,
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontSize: 13,
+                        border: "none",
+                        borderRight: "1px solid #e2e8f0",
+                        background: page === "profile" ? "#f8fafc" : "#fff",
+                        cursor: "pointer",
+                        color: "#1e293b",
+                      }}
+                    >
+                      Profile
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        if (isElevated) {
+                          setSettingsTab("control");
+                          setPage("settings");
+                        } else {
+                          setPage("profile");
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontSize: 13,
+                        border: "none",
+                        background:
+                          isElevated && page === "settings" && settingsTab === "control"
+                            ? "#f8fafc"
+                            : !isElevated && page === "profile"
+                              ? "#f8fafc"
+                              : "#fff",
+                        cursor: "pointer",
+                        color: "#1e293b",
+                      }}
                     >
                       Settings
                     </button>
-                  )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      logout();
+                    }}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      padding: "10px 14px",
+                      textAlign: "center",
+                      fontSize: 13,
+                      border: "none",
+                      background: "none",
+                      cursor: "pointer",
+                      color: "#e11d48",
+                    }}
+                  >
+                    Sign out
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: 24 }} className="dr-sc" onClick={() => showNotifs && setShowNotifs(false)}>
+        <div
+          style={{ flex: 1, overflowY: "auto", padding: 24 }}
+          className="dr-sc"
+          onClick={() => {
+            if (showNotifs) setShowNotifs(false);
+            if (menuOpen) setMenuOpen(false);
+          }}
+        >
           {page === "dashboard" && (
             <RemixDashboard user={rUser} attendance={attendance} leaves={leaves} sessions={sessions} tasks={tasks} setPage={setPage} teamCount={coordinators.length || 1} />
           )}

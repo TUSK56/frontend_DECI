@@ -21,7 +21,9 @@ export function ProfilePage() {
   const { user, refreshMe } = useAuth();
   const [data, setData] = useState<Profile | null>(null);
   const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [profileErr, setProfileErr] = useState("");
   const [cur, setCur] = useState("");
   const [nw, setNw] = useState("");
 
@@ -31,16 +33,32 @@ export function ProfilePage() {
       const p = await apiJson<Profile>(`/api/users/${user.id}`);
       setData(p);
       setFullName(p.user.fullName);
+      setEmail(p.user.email);
       setPhone(p.user.phone ?? "");
     })();
   }, [user]);
 
   const saveProfile = async () => {
-    await apiJson("/api/users/me/profile", { method: "PUT", body: JSON.stringify({ fullName, phone }) });
-    await refreshMe();
-    if (user) {
-      const p = await apiJson<Profile>(`/api/users/${user.id}`);
-      setData(p);
+    setProfileErr("");
+    try {
+      await apiJson("/api/users/me/profile", {
+        method: "PUT",
+        body: JSON.stringify({ fullName, phone, email: email.trim() }),
+      });
+      await refreshMe();
+      if (user) {
+        const p = await apiJson<Profile>(`/api/users/${user.id}`);
+        setData(p);
+        setEmail(p.user.email);
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Could not save profile";
+      try {
+        const j = JSON.parse(msg) as { detail?: string; title?: string };
+        setProfileErr(typeof j.detail === "string" ? j.detail : msg);
+      } catch {
+        setProfileErr(msg.replace(/^"|"$/g, "") || "Could not save profile");
+      }
     }
   };
 
@@ -108,9 +126,15 @@ export function ProfilePage() {
 
       <div className="card space-y-3">
         <div className="text-sm font-semibold text-slate-900">Update profile</div>
+        {profileErr && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{profileErr}</div>}
         <div>
           <label className="label">Full name</label>
           <input className="input" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        </div>
+        <div>
+          <label className="label">Email</label>
+          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+          <p className="mt-1 text-xs text-slate-500">Use your new email the next time you sign in.</p>
         </div>
         <div>
           <label className="label">Phone</label>
