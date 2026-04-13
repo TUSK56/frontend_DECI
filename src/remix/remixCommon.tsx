@@ -1,3 +1,4 @@
+import { apiUrl } from "../api/client";
 import type { SessionDto, TaskDto, AttendanceDto } from "../types";
 
 export const PALETTE = ["#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
@@ -21,7 +22,14 @@ export function fmtDate(iso: string | undefined | null): string {
   return iso ? new Date(iso).toLocaleDateString() : "—";
 }
 
-export type RemixUser = { id: number; name: string; initials: string; role: "manager" | "coordinator" };
+export type RemixUser = {
+  id: number;
+  name: string;
+  initials: string;
+  role: "manager" | "coordinator";
+  /** Absolute or API-relative profile image URL (same as Auth user.profileImageUrl). */
+  imageUrl?: string | null;
+};
 
 export function RemixBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
@@ -37,6 +45,26 @@ export function RemixBadge({ status }: { status: string }) {
 
 export function RemixAvatar({ user, size = 32 }: { user: RemixUser; size?: number }) {
   const bg = ucForId(user.id);
+  const raw = user.imageUrl?.trim();
+  if (raw) {
+    const src = raw.startsWith("http") ? raw : apiUrl(raw);
+    return (
+      <img
+        src={src}
+        alt=""
+        width={size}
+        height={size}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          objectFit: "cover",
+          flexShrink: 0,
+          border: "2px solid rgba(255,255,255,.2)",
+        }}
+      />
+    );
+  }
   return (
     <div
       style={{
