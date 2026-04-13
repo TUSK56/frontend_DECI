@@ -64,6 +64,10 @@ export function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">My profile</h1>
+        <p className="mt-1 text-sm text-slate-600">Your information, activity summary, and security.</p>
+      </div>
       <div className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <Avatar userId={data.user.id} name={data.user.fullName} imageUrl={data.user.profileImageUrl} size={56} />
@@ -80,14 +84,17 @@ export function ProfilePage() {
       </div>
 
       {data.stats && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="card">
-            <div className="text-xs text-slate-500">Total sessions logged</div>
-            <div className="text-2xl font-bold text-slate-900">{data.stats.totalSessionsLogged}</div>
-          </div>
-          <div className="card">
-            <div className="text-xs text-slate-500">Tasks completed</div>
-            <div className="text-2xl font-bold text-slate-900">{data.stats.tasksCompleted}</div>
+        <div>
+          <h2 className="mb-3 text-sm font-semibold text-slate-900">Activity summary</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="card">
+              <div className="text-xs text-slate-500">Total sessions logged</div>
+              <div className="text-2xl font-bold text-slate-900">{data.stats.totalSessionsLogged}</div>
+            </div>
+            <div className="card">
+              <div className="text-xs text-slate-500">Tasks completed</div>
+              <div className="text-2xl font-bold text-slate-900">{data.stats.tasksCompleted}</div>
+            </div>
           </div>
         </div>
       )}

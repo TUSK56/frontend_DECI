@@ -9,9 +9,10 @@ import {
   ClipboardList,
   FileText,
   Clock,
-  Calendar,
+  CircleAlert,
   Home,
   BarChart2,
+  User,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import type { SessionDto, TaskDto, ChatDto, AttendanceDto, PageId } from "../types";
@@ -128,14 +129,14 @@ export default function DeciRemixApp() {
   const nav = useMemo(() => {
     const base: { id: RemixPage; label: string; icon: typeof Home }[] = [
       { id: "dashboard", label: "Dashboard", icon: Home },
-      { id: "attendance", label: "Attendance", icon: Clock },
-      { id: "leaves", label: "Leave Requests", icon: Calendar },
-      { id: "sessions", label: "Session Logs", icon: FileText },
       { id: "tasks", label: "Tasks", icon: ClipboardList },
-      { id: "chat", label: "Team Chat", icon: MessageSquare },
+      { id: "sessions", label: "Session", icon: FileText },
+      { id: "chat", label: "Chat", icon: MessageSquare },
+      { id: "leaves", label: "Issues", icon: CircleAlert },
+      { id: "attendance", label: "Attendance", icon: Clock },
     ];
     if (isElevated) base.push({ id: "reports", label: "Reports & Export", icon: BarChart2 });
-    if (isAdmin) base.push({ id: "users", label: "User management", icon: Users });
+    if (isAdmin) base.push({ id: "users", label: "User Management", icon: Users });
     if (isElevated) base.push({ id: "settings", label: "Settings", icon: Settings });
     return base;
   }, [isElevated, isAdmin]);
@@ -163,7 +164,9 @@ export default function DeciRemixApp() {
     );
   }
 
-  const title = nav.find((n) => n.id === page)?.label ?? (page === "profile" ? "Profile" : "DECI");
+  const title =
+    nav.find((n) => n.id === page)?.label ??
+    (page === "profile" ? "Profile" : page === "settings" ? "Settings" : "DECI");
 
   return (
     <div className="deci-remix" style={{ display: "flex", height: "100vh", background: "#f8fafc", fontFamily: "'Inter',system-ui,sans-serif" }}>
@@ -235,13 +238,65 @@ export default function DeciRemixApp() {
           ))}
         </nav>
         <div style={{ padding: "10px 8px", borderTop: "1px solid rgba(255,255,255,.1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, borderRadius: 8, marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, borderRadius: 8, marginBottom: 6 }}>
             <RemixAvatar user={rUser} size={30} />
             {sidebar && (
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ color: "#fff", fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{rUser.name}</div>
                 <div style={{ color: "rgba(255,255,255,.4)", fontSize: 11, textTransform: "capitalize" }}>{rUser.role === "manager" ? "Lead" : "Coordinator"}</div>
               </div>
+            )}
+          </div>
+          <div style={{ display: "flex", gap: 6, marginBottom: 6, padding: "0 4px" }}>
+            <button
+              type="button"
+              className="dr-ni"
+              title="Profile"
+              onClick={() => setPage("profile")}
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                padding: "8px 6px",
+                borderRadius: 8,
+                border: "none",
+                cursor: "pointer",
+                background: page === "profile" ? "rgba(255,255,255,.12)" : "transparent",
+                color: "rgba(255,255,255,.85)",
+                fontSize: 12,
+                fontFamily: "inherit",
+              }}
+            >
+              <User size={16} />
+              {sidebar && <span>Profile</span>}
+            </button>
+            {isElevated && (
+              <button
+                type="button"
+                className="dr-ni"
+                title="Settings"
+                onClick={() => setPage("settings")}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  padding: "8px 6px",
+                  borderRadius: 8,
+                  border: "none",
+                  cursor: "pointer",
+                  background: page === "settings" ? "rgba(255,255,255,.12)" : "transparent",
+                  color: "rgba(255,255,255,.85)",
+                  fontSize: 12,
+                  fontFamily: "inherit",
+                }}
+              >
+                <Settings size={16} />
+                {sidebar && <span>Settings</span>}
+              </button>
             )}
           </div>
           <button
@@ -367,6 +422,18 @@ export default function DeciRemixApp() {
                   >
                     Profile
                   </button>
+                  {isElevated && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setPage("settings");
+                      }}
+                      style={{ display: "block", width: "100%", padding: "10px 14px", textAlign: "left", fontSize: 13, border: "none", background: "none", cursor: "pointer" }}
+                    >
+                      Settings
+                    </button>
+                  )}
                 </div>
               )}
             </div>

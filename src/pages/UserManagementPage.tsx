@@ -87,11 +87,17 @@ export function UserManagementPage({ setPage }: { setPage: (p: PageId) => void }
 
   return (
     <div className="space-y-4">
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">User &amp; profile management</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          Manage coordinators and managers. Each user has a profile page for their details, photo, password, and activity.
+        </p>
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm text-slate-600">{users.length} users</div>
         <div className="flex gap-2">
           <button type="button" className="btn-secondary" onClick={() => setPage("settings")}>
-            Admin settings
+            Control panel
           </button>
           <button type="button" className="btn-primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

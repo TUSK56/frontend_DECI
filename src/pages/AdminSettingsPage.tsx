@@ -68,6 +68,13 @@ export function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">Admin control panel</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          Global lists, attendance policy, and session rules. User accounts are managed under <strong>User Management</strong> in the sidebar.
+        </p>
+      </div>
+
       <div className="card space-y-4">
         <div className="text-sm font-semibold text-slate-900">Attendance policy</div>
         <div className="grid gap-3 md:grid-cols-2">
@@ -96,7 +103,8 @@ export function AdminSettingsPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="card space-y-3">
-          <div className="text-sm font-semibold text-slate-900">Trainer names</div>
+          <div className="text-sm font-semibold text-slate-900">Global list — trainer names</div>
+          <p className="text-xs text-slate-500">Used in session forms for all coordinators.</p>
           <div className="flex gap-2">
             <input className="input" value={newTrainer} onChange={(e) => setNewTrainer(e.target.value)} placeholder="Add trainer…" />
             <button type="button" className="btn-primary" onClick={() => void addTrainer()}>
@@ -118,7 +126,8 @@ export function AdminSettingsPage() {
         </div>
 
         <div className="card space-y-3">
-          <div className="text-sm font-semibold text-slate-900">Group codes</div>
+          <div className="text-sm font-semibold text-slate-900">Global list — group codes</div>
+          <p className="text-xs text-slate-500">Master codes available when logging sessions.</p>
           <div className="flex gap-2">
             <input className="input" value={newCode} onChange={(e) => setNewCode(e.target.value)} placeholder="Add code…" />
             <button type="button" className="btn-primary" onClick={() => void addCode()}>

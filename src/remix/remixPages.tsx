@@ -77,7 +77,7 @@ export function RemixDashboard({
     : [
         { l: "My Sessions", v: sessions.filter((s) => s.coordinatorUserId === user.id).length, c: "#6366f1", icon: FileText },
         {
-          l: "Pending Leaves",
+          l: "Pending Issues",
           v: leaves.filter((l) => l.userId === user.id && l.status === "pending").length,
           c: "#f59e0b",
           icon: Calendar,
@@ -132,7 +132,7 @@ export function RemixDashboard({
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div className="dr-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 600, color: "#1e293b" }}>Recent Sessions</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 600, color: "#1e293b" }}>Recent session activity</h3>
             <button type="button" onClick={() => setPage("sessions")} style={{ fontSize: 12, color: "#6366f1", background: "none", border: "none", cursor: "pointer" }}>
               View all
             </button>
@@ -306,11 +306,11 @@ export function RemixLeavesPage({
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <span style={{ color: "#64748b", fontSize: 13 }}>{shown.length} request(s)</span>
+        <span style={{ color: "#64748b", fontSize: 13 }}>{shown.length} issue(s)</span>
         {user.role !== "manager" && (
           <button type="button" className="dr-bp" onClick={() => setShow(true)}>
             <Plus size={16} />
-            New Request
+            New issue
           </button>
         )}
       </div>
@@ -318,7 +318,7 @@ export function RemixLeavesPage({
         <div className="dr-mo" onClick={(e) => e.target === e.currentTarget && setShow(false)}>
           <div className="dr-md">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 600, color: "#1e293b" }}>New Leave Request</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: "#1e293b" }}>New issue</h3>
               <button type="button" onClick={() => setShow(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
                 <X size={20} />
               </button>
@@ -327,7 +327,7 @@ export function RemixLeavesPage({
               <label>Type</label>
               <select value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>
                 <option value="vacation">Vacation</option>
-                <option value="sick">Sick Leave</option>
+                <option value="sick">Sick / medical</option>
                 <option value="personal">Personal</option>
                 <option value="emergency">Emergency</option>
               </select>
@@ -351,7 +351,7 @@ export function RemixLeavesPage({
                 Cancel
               </button>
               <button type="button" className="dr-bp" onClick={() => void submit()}>
-                Submit Request
+                Submit issue
               </button>
             </div>
           </div>
@@ -375,7 +375,7 @@ export function RemixLeavesPage({
               {shown.length === 0 ? (
                 <tr>
                   <td colSpan={8} style={{ textAlign: "center", padding: 24, color: "#94a3b8" }}>
-                    No requests found
+                    No issues found
                   </td>
                 </tr>
               ) : (
@@ -486,6 +486,9 @@ export function RemixSessionsPage({
 
   return (
     <div>
+      <p style={{ color: "#64748b", fontSize: 13, marginBottom: 16, lineHeight: 1.5 }}>
+        Each log is stored under the <strong>coordinator</strong> who submitted it. Include group code, trainer, links, attendance file, recording, and screenshots as needed.
+      </p>
       <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 24, flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 200, position: "relative" }}>
           <Search size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
@@ -499,7 +502,7 @@ export function RemixSessionsPage({
         </select>
         <button type="button" className="dr-bp" onClick={() => setShow(true)}>
           <Plus size={16} />
-          Log Session
+          New session
         </button>
       </div>
 
@@ -507,7 +510,7 @@ export function RemixSessionsPage({
         <div className="dr-mo" onClick={(e) => e.target === e.currentTarget && setShow(false)}>
           <div className="dr-md" style={{ maxWidth: 640 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 600, color: "#1e293b" }}>Log New Session</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: "#1e293b" }}>New session log</h3>
               <button type="button" onClick={() => setShow(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
                 <X size={20} />
               </button>
@@ -580,7 +583,7 @@ export function RemixSessionsPage({
                 Cancel
               </button>
               <button type="button" className="dr-bp" onClick={() => void submit()}>
-                Submit Log
+                Submit session
               </button>
             </div>
           </div>
