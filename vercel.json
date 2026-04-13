@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "node run-build.mjs",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
