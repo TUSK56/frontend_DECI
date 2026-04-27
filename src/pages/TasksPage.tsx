@@ -3,7 +3,7 @@ import { Plus, Trash2, X } from "lucide-react";
 import { apiJson } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import type { TaskDto } from "../types";
-import { Badge } from "../components/Badge";
+
 
 type UserRow = { id: number; email: string; fullName: string; role: string };
 

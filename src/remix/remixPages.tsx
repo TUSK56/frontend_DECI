@@ -5,14 +5,14 @@ import {
   FileText,
   CheckSquare,
   MessageSquare,
-  BarChart2,
+
   Plus,
   Search,
   Download,
   Upload,
   Eye,
   Send,
-  Home,
+
   AlertCircle,
   Trash2,
   X,
@@ -59,7 +59,7 @@ export function RemixDashboard({
   setPage: (p: string) => void;
   teamCount: number;
 }) {
-  const today = new Date().toDateString();
+
   const todayRec = todayAttendanceRecord(attendance, user.id);
   const isManager = user.role === "manager";
   const stats = isManager
@@ -498,7 +498,6 @@ export function RemixSessionsPage({
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
         </select>
         <button type="button" className="dr-bp" onClick={() => setShow(true)}>
           <Plus size={16} />
